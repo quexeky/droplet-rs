@@ -68,7 +68,7 @@ impl VersionBackend for PathVersionBackend {
     }
 
     async fn reader(
-        &mut self,
+        &self,
         file: &VersionFile,
         start: u64,
         end: u64,
@@ -92,8 +92,7 @@ impl VersionBackend for PathVersionBackend {
             return Err(anyhow!("Path doesn't exist: {}", pathbuf.to_string_lossy()));
         };
 
-        let file = File::open(pathbuf.clone()).await?;
-        let metadata = file.try_clone().await?.metadata().await?;
+        let metadata = tokio::fs::metadata(pathbuf).await?;
         let permission_object = metadata.permissions();
         let permissions = {
             let perm: u32;
@@ -198,7 +197,7 @@ impl VersionBackend for ZipVersionBackend {
     }
 
     async fn reader(
-        &mut self,
+        &self,
         file: &VersionFile,
         _start: u64,
         _end: u64,

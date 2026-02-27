@@ -20,7 +20,7 @@ pub trait VersionBackend: DynClone {
     async fn list_files(&mut self) -> anyhow::Result<Vec<VersionFile>>;
     async fn peek_file(&mut self, sub_path: String) -> anyhow::Result<VersionFile>;
     async fn reader(
-        &mut self,
+        &self,
         file: &VersionFile,
         start: u64,
         end: u64,
